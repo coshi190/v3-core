@@ -4,31 +4,66 @@ import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
 
 export default {
+  // networks: {
+  //   'jbc': {
+  //     url: 'https://rpc-l1.jibchain.net'
+  //   },
+  // },
+  // etherscan: {
+  //   apiKey: {
+  //     'jbc': 'empty'
+  //   },
+  //   customChains: [
+  //     {
+  //       network: "jbc",
+  //       chainId: 8899,
+  //       urls: {
+  //         apiURL: "https://exp.jibchain.net/api",
+  //         browserURL: "https://exp.jibchain.net"
+  //       }
+  //     }
+  //   ]
+  // },
   networks: {
-    hardhat: {
-      allowUnlimitedContractSize: false,
-    },
-    mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-    },
-    kovan: {
-      url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
+    'kub': {
+      url: 'https://rpc.bitkubchain.io'
     },
   },
   etherscan: {
-    // Your API key for Etherscan
-    // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      'kub': 'empty'
+    },
+    customChains: [
+      {
+        network: "kub",
+        chainId: 96,
+        urls: {
+          apiURL: "https://www.kubscan.com/api",
+          browserURL: "https://www.kubscan.com"
+        }
+      }
+    ]
   },
+  // networks: {
+  //   'monad': {
+  //     url: 'https://testnet-rpc.monad.xyz'
+  //   },
+  // },
+  // etherscan: {
+  //   apiKey: {
+  //     'monad': 'empty'
+  //   },
+  //   customChains: [
+  //     {
+  //       network: "monad",
+  //       chainId: 10143,
+  //       urls: {
+  //         apiURL: "https://api.socialscan.io/monad-testnet/v1/explorer/command_api/contract",
+  //         browserURL: "https://testnet.monadexplorer.com"
+  //       }
+  //     }
+  //   ]
+  // },
   solidity: {
     version: '0.7.6',
     settings: {
