@@ -4,4 +4,5 @@ crytic-export/
 node_modules/
 typechain/
 .DS_Store
+cache_forge/
 out/
