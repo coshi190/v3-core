@@ -4,36 +4,28 @@ import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
 
 export default {
-  // networks: {
-  //   'jbc': {
-  //     url: 'https://rpc-l1.jibchain.net'
-  //   },
-  // },
-  // etherscan: {
-  //   apiKey: {
-  //     'jbc': 'empty'
-  //   },
-  //   customChains: [
-  //     {
-  //       network: "jbc",
-  //       chainId: 8899,
-  //       urls: {
-  //         apiURL: "https://exp.jibchain.net/api",
-  //         browserURL: "https://exp.jibchain.net"
-  //       }
-  //     }
-  //   ]
-  // },
   networks: {
-    'kub': {
-      url: 'https://rpc.bitkubchain.io'
-    },
+    'jbc': { url: 'https://rpc-l1.jibchain.net' },
+    'kub': { url: 'https://rpc.bitkubchain.io' },
+    'tkub': { url: 'https://rpc-testnet.bitkubchain.io' },
+    'tmonad': { url: 'https://testnet-rpc.monad.xyz' },
   },
   etherscan: {
     apiKey: {
-      'kub': 'empty'
+      'jbc': 'empty',
+      'kub': 'empty',
+      'tkub': 'empty',
+      'tmonad': 'empty'
     },
     customChains: [
+      {
+        network: "jbc",
+        chainId: 8899,
+        urls: {
+          apiURL: "https://exp.jibchain.net/api",
+          browserURL: "https://exp.jibchain.net"
+        }
+      },
       {
         network: "kub",
         chainId: 96,
@@ -41,29 +33,25 @@ export default {
           apiURL: "https://www.kubscan.com/api",
           browserURL: "https://www.kubscan.com"
         }
+      },
+      {
+        network: "tkub",
+        chainId: 25925,
+        urls: {
+          apiURL: "https://testnet.kubscan.com/api",
+          browserURL: "https://www.kubscan.com"
+        }
+      },
+      {
+        network: "tmonad",
+        chainId: 10143,
+        urls: {
+          apiURL: "https://api.socialscan.io/monad-testnet/v1/explorer/command_api/contract",
+          browserURL: "https://testnet.monadexplorer.com"
+        }
       }
     ]
   },
-  // networks: {
-  //   'monad': {
-  //     url: 'https://testnet-rpc.monad.xyz'
-  //   },
-  // },
-  // etherscan: {
-  //   apiKey: {
-  //     'monad': 'empty'
-  //   },
-  //   customChains: [
-  //     {
-  //       network: "monad",
-  //       chainId: 10143,
-  //       urls: {
-  //         apiURL: "https://api.socialscan.io/monad-testnet/v1/explorer/command_api/contract",
-  //         browserURL: "https://testnet.monadexplorer.com"
-  //       }
-  //     }
-  //   ]
-  // },
   solidity: {
     version: '0.7.6',
     settings: {
