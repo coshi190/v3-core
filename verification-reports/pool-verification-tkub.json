@@ -1,0 +1,195 @@
+{
+  "network": "tkub",
+  "timestamp": "2025-08-20T06:58:54.701Z",
+  "executionOptions": {
+    "network": "tkub",
+    "useEvents": true,
+    "batchSize": 5,
+    "delayBetweenVerifications": 8000,
+    "delayBetweenBatches": 20000,
+    "fromBlock": null,
+    "generateReportsFlag": true
+  },
+  "summary": {
+    "totalPools": 4,
+    "successfulVerifications": 3,
+    "failedVerifications": 1,
+    "successRate": "75.00%"
+  },
+  "pools": [
+    {
+      "address": "0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf",
+      "token0": {
+        "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "name": "TestToken",
+        "symbol": "tT",
+        "decimals": 18
+      },
+      "token1": {
+        "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "name": "Wrapped tKUB",
+        "symbol": "tKKUB",
+        "decimals": 18
+      },
+      "fee": "10000",
+      "feePercentage": "1%",
+      "pairName": "tT/tKKUB",
+      "blockNumber": 23936029,
+      "transactionHash": "0xcd72bd3c0604c4facee2d47df8a8ad66caf5c61261af05c7f9fd8126e3dcb53a"
+    },
+    {
+      "address": "0x4818F68EDb4cBAc745Cf913734D9407924443DA8",
+      "token0": {
+        "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "name": "TestToken",
+        "symbol": "tT",
+        "decimals": 18
+      },
+      "token1": {
+        "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "name": "Wrapped tKUB",
+        "symbol": "tKKUB",
+        "decimals": 18
+      },
+      "fee": "3000",
+      "feePercentage": "0.3%",
+      "pairName": "tT/tKKUB",
+      "blockNumber": 23936045,
+      "transactionHash": "0x7d9a354e530732cdd4e4deaed5c1f180784523beb34e88e5bc7323d5b7fe0fad"
+    },
+    {
+      "address": "0x77069E705DcE52Ed903fD577f46dCDB54d4Db0ac",
+      "token0": {
+        "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "name": "Wrapped tKUB",
+        "symbol": "tKKUB",
+        "decimals": 18
+      },
+      "token1": {
+        "address": "0xE7f64C5fEFC61F85A8b851d8B16C4E21F91e60c0",
+        "name": "TestKUB",
+        "symbol": "tK",
+        "decimals": 18
+      },
+      "fee": "10000",
+      "feePercentage": "1%",
+      "pairName": "tKKUB/tK",
+      "blockNumber": 23968965,
+      "transactionHash": "0xfa8044edf19fe5d2e32685cbc03b966985dc3f961e0ce4329c9f67773c57c444"
+    },
+    {
+      "address": "0x81182579f4271B910bF108913Be78F0D9C44AaBa",
+      "token0": {
+        "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "name": "TestToken",
+        "symbol": "tT",
+        "decimals": 18
+      },
+      "token1": {
+        "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "name": "Wrapped tKUB",
+        "symbol": "tKKUB",
+        "decimals": 18
+      },
+      "fee": "100",
+      "feePercentage": "0.01%",
+      "pairName": "tT/tKKUB",
+      "blockNumber": 24058135,
+      "transactionHash": "0x8a76f536c2f4a6d5c15682f0134ac40cc0e9cbd5fe6d0b54889bf49c99b7d0ba"
+    }
+  ],
+  "verificationResults": [
+    {
+      "poolAddress": "0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf",
+      "success": true,
+      "alreadyVerified": false,
+      "error": null,
+      "poolInfo": {
+        "pairName": "tT/tKKUB",
+        "token0": {
+          "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+          "name": "TestToken",
+          "symbol": "tT",
+          "decimals": 18
+        },
+        "token1": {
+          "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+          "name": "Wrapped tKUB",
+          "symbol": "tKKUB",
+          "decimals": 18
+        },
+        "fee": "10000",
+        "feePercentage": "1%"
+      }
+    },
+    {
+      "poolAddress": "0x4818F68EDb4cBAc745Cf913734D9407924443DA8",
+      "success": true,
+      "alreadyVerified": false,
+      "error": null,
+      "poolInfo": {
+        "pairName": "tT/tKKUB",
+        "token0": {
+          "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+          "name": "TestToken",
+          "symbol": "tT",
+          "decimals": 18
+        },
+        "token1": {
+          "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+          "name": "Wrapped tKUB",
+          "symbol": "tKKUB",
+          "decimals": 18
+        },
+        "fee": "3000",
+        "feePercentage": "0.3%"
+      }
+    },
+    {
+      "poolAddress": "0x77069E705DcE52Ed903fD577f46dCDB54d4Db0ac",
+      "success": false,
+      "alreadyVerified": false,
+      "error": "The API responded with an unexpected message.\nContract verification may have succeeded and should be checked manually.\nMessage: Unknown UID",
+      "poolInfo": {
+        "pairName": "tKKUB/tK",
+        "token0": {
+          "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+          "name": "Wrapped tKUB",
+          "symbol": "tKKUB",
+          "decimals": 18
+        },
+        "token1": {
+          "address": "0xE7f64C5fEFC61F85A8b851d8B16C4E21F91e60c0",
+          "name": "TestKUB",
+          "symbol": "tK",
+          "decimals": 18
+        },
+        "fee": "10000",
+        "feePercentage": "1%"
+      }
+    },
+    {
+      "poolAddress": "0x81182579f4271B910bF108913Be78F0D9C44AaBa",
+      "success": true,
+      "alreadyVerified": false,
+      "error": null,
+      "poolInfo": {
+        "pairName": "tT/tKKUB",
+        "token0": {
+          "address": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+          "name": "TestToken",
+          "symbol": "tT",
+          "decimals": 18
+        },
+        "token1": {
+          "address": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+          "name": "Wrapped tKUB",
+          "symbol": "tKKUB",
+          "decimals": 18
+        },
+        "fee": "100",
+        "feePercentage": "0.01%"
+      }
+    }
+  ]
+}

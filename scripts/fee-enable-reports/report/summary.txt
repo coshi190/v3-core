@@ -1,0 +1,53 @@
+
+        ═══════════════════════════════════════════════════════════════
+                            UNISWAP V3 FEE PROTOCOL UPDATE REPORT
+        ═══════════════════════════════════════════════════════════════
+
+        EXECUTION SUMMARY
+        ────────────────────────────────────────────────────────────────
+        Network:                    tkub
+        Factory Address:             0xCBd41F872FD46964bD4Be4d72a8bEBA9D656565b
+        Executor Address:            0x1fE5621152A33a877f2b40a4bB7bc824eEbea1EA
+        Target Fee Protocol:         10/10
+
+        TIMING INFORMATION
+        ────────────────────────────────────────────────────────────────
+        Start Time:                  2025-08-20T09:50:43.476Z
+        End Time:                    2025-08-20T09:51:57.288Z
+        Total Duration:              74 seconds
+        Duration (formatted):        1m 13s
+
+        POOL STATISTICS
+        ────────────────────────────────────────────────────────────────
+        Total Pools Analyzed:        4
+        Pools Needing Update:        1
+        Pools Already Correct:       3
+        Successful Updates:          0
+        Failed Updates:              1
+        Success Rate:                0.00%
+
+        GAS INFORMATION
+        ────────────────────────────────────────────────────────────────
+        Total Gas Used:              0 units
+        Average Gas Price:           0.0 gwei
+        Total Cost:                  0.0 ETH
+        Gas Limit per TX:            100000
+        Max Fee per Gas:             30.0 gwei
+        Max Priority Fee:            2.0 gwei
+
+        CONFIGURATION SETTINGS
+        ────────────────────────────────────────────────────────────────
+        Batch Size:                  50
+        Network:                     tkub
+        Output Directory:            ./fee-enable-reports
+
+        
+        ERRORS ENCOUNTERED (1)
+        ────────────────────────────────────────────────────────────────
+        • 0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf: cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ] (reason="execution reverted: LOK", method="estimateGas", transaction={"from":"0x1fE5621152A33a877f2b40a4bB7bc824eEbea1EA","to":"0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf","data":"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a","accessList":null}, error={"reason":"processing response error","code":"SERVER_ERROR","body":"{\"jsonrpc\":\"2.0\",\"id\":192,\"error\":{\"code\":3,\"message\":\"execution reverted: LOK\",\"data\":\"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000\"}}\n","error":{"code":3,"data":"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000"},"requestBody":"{\"method\":\"eth_estimateGas\",\"params\":[{\"from\":\"0x1fe5621152a33a877f2b40a4bb7bc824eebea1ea\",\"to\":\"0x70601d6107f9c66c3f0090a605cf767e8cbc9ccf\",\"data\":\"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a\"}],\"id\":192,\"jsonrpc\":\"2.0\"}","requestMethod":"POST","url":"https://rpc-testnet.bitkubchain.io"}, code=UNPREDICTABLE_GAS_LIMIT, version=providers/5.8.0)
+        
+
+        ═══════════════════════════════════════════════════════════════
+        Report generated on: 2025-08-20T09:51:57.291Z
+        ═══════════════════════════════════════════════════════════════
+        

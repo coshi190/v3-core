@@ -1,0 +1,22 @@
+POOL VERIFICATION SUMMARY REPORT
+        =====================================
+        Network: tkub
+        Execution Time: 2025-08-20T06:58:54.701Z
+        Total Pools Found: 4
+        Successfully Verified: 3
+        Failed Verifications: 1
+
+        SUCCESSFUL VERIFICATIONS:
+        1. tT/tKKUB (1%) - 0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf
+2. tT/tKKUB (0.3%) - 0x4818F68EDb4cBAc745Cf913734D9407924443DA8
+3. tT/tKKUB (0.01%) - 0x81182579f4271B910bF108913Be78F0D9C44AaBa
+
+        
+        FAILED VERIFICATIONS:
+        1. tKKUB/tK (1%) - 0x77069E705DcE52Ed903fD577f46dCDB54d4Db0ac
+   Error: The API responded with an unexpected message.
+Contract verification may have succeeded and should be checked manually.
+Message: Unknown UID
+        
+
+        Report generated at: 8/20/2025, 1:58:54 PM

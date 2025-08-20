@@ -6,3 +6,4 @@ typechain/
 .DS_Store
 cache_forge/
 out/
+.env*

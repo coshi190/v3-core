@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "timestamp": "2025-08-20T09:51:57.295Z",
+    "network": "tkub",
+    "factoryAddress": "0xCBd41F872FD46964bD4Be4d72a8bEBA9D656565b",
+    "executorAddress": "0x1fE5621152A33a877f2b40a4bB7bc824eEbea1EA",
+    "targetFeeProtocol": {
+      "token0": 10,
+      "token1": 10
+    },
+    "execution": {
+      "startTime": "2025-08-20T09:50:43.476Z",
+      "endTime": "2025-08-20T09:51:57.288Z",
+      "durationMs": 73812,
+      "durationFormatted": "1m 13s"
+    }
+  },
+  "statistics": {
+    "totalPoolsAnalyzed": 4,
+    "poolsNeedingUpdate": 1,
+    "poolsAlreadyCorrect": 3,
+    "successfulUpdates": 0,
+    "failedUpdates": 1,
+    "successRate": 0
+  },
+  "gasInformation": {
+    "totalGasUsed": "0",
+    "averageGasPrice": "0",
+    "gasLimitPerTx": 100000,
+    "maxFeePerGas": "30000000000",
+    "maxPriorityFeePerGas": "2000000000"
+  },
+  "configuration": {
+    "batchSize": 50,
+    "networkName": "tkub",
+    "outputDir": "./fee-enable-reports"
+  },
+  "pools": {
+    "all": [
+      {
+        "address": "0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf",
+        "token0": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "token1": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "fee": "10000",
+        "currentFeeProtocol0": 0,
+        "currentFeeProtocol1": 0,
+        "needsUpdate": true
+      },
+      {
+        "address": "0x4818F68EDb4cBAc745Cf913734D9407924443DA8",
+        "token0": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "token1": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "fee": "3000",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "needsUpdate": false
+      },
+      {
+        "address": "0x77069E705DcE52Ed903fD577f46dCDB54d4Db0ac",
+        "token0": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "token1": "0xE7f64C5fEFC61F85A8b851d8B16C4E21F91e60c0",
+        "fee": "10000",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "needsUpdate": false
+      },
+      {
+        "address": "0x81182579f4271B910bF108913Be78F0D9C44AaBa",
+        "token0": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "token1": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "fee": "100",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "needsUpdate": false
+      }
+    ],
+    "processed": [
+      {
+        "address": "0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf",
+        "status": "error",
+        "error": "cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ] (reason=\"execution reverted: LOK\", method=\"estimateGas\", transaction={\"from\":\"0x1fE5621152A33a877f2b40a4bB7bc824eEbea1EA\",\"to\":\"0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf\",\"data\":\"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a\",\"accessList\":null}, error={\"reason\":\"processing response error\",\"code\":\"SERVER_ERROR\",\"body\":\"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":192,\\\"error\\\":{\\\"code\\\":3,\\\"message\\\":\\\"execution reverted: LOK\\\",\\\"data\\\":\\\"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000\\\"}}\\n\",\"error\":{\"code\":3,\"data\":\"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000\"},\"requestBody\":\"{\\\"method\\\":\\\"eth_estimateGas\\\",\\\"params\\\":[{\\\"from\\\":\\\"0x1fe5621152a33a877f2b40a4bb7bc824eebea1ea\\\",\\\"to\\\":\\\"0x70601d6107f9c66c3f0090a605cf767e8cbc9ccf\\\",\\\"data\\\":\\\"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a\\\"}],\\\"id\\\":192,\\\"jsonrpc\\\":\\\"2.0\\\"}\",\"requestMethod\":\"POST\",\"url\":\"https://rpc-testnet.bitkubchain.io\"}, code=UNPREDICTABLE_GAS_LIMIT, version=providers/5.8.0)",
+        "timestamp": "2025-08-20T09:51:55.287Z"
+      }
+    ],
+    "skipped": [
+      {
+        "address": "0x4818F68EDb4cBAc745Cf913734D9407924443DA8",
+        "token0": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "token1": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "fee": "3000",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "reason": "Already has correct fee protocol"
+      },
+      {
+        "address": "0x77069E705DcE52Ed903fD577f46dCDB54d4Db0ac",
+        "token0": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "token1": "0xE7f64C5fEFC61F85A8b851d8B16C4E21F91e60c0",
+        "fee": "10000",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "reason": "Already has correct fee protocol"
+      },
+      {
+        "address": "0x81182579f4271B910bF108913Be78F0D9C44AaBa",
+        "token0": "0x23352915164527e0AB53Ca5519aec5188aa224A2",
+        "token1": "0x700D3ba307E1256e509eD3E45D6f9dff441d6907",
+        "fee": "100",
+        "currentFeeProtocol0": 10,
+        "currentFeeProtocol1": 10,
+        "reason": "Already has correct fee protocol"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "pool": "0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf",
+      "error": "cannot estimate gas; transaction may fail or may require manual gas limit [ See: https://links.ethers.org/v5-errors-UNPREDICTABLE_GAS_LIMIT ] (reason=\"execution reverted: LOK\", method=\"estimateGas\", transaction={\"from\":\"0x1fE5621152A33a877f2b40a4bB7bc824eEbea1EA\",\"to\":\"0x70601d6107F9C66C3f0090a605Cf767E8CbC9Ccf\",\"data\":\"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a\",\"accessList\":null}, error={\"reason\":\"processing response error\",\"code\":\"SERVER_ERROR\",\"body\":\"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"id\\\":192,\\\"error\\\":{\\\"code\\\":3,\\\"message\\\":\\\"execution reverted: LOK\\\",\\\"data\\\":\\\"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000\\\"}}\\n\",\"error\":{\"code\":3,\"data\":\"0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000034c4f4b0000000000000000000000000000000000000000000000000000000000\"},\"requestBody\":\"{\\\"method\\\":\\\"eth_estimateGas\\\",\\\"params\\\":[{\\\"from\\\":\\\"0x1fe5621152a33a877f2b40a4bb7bc824eebea1ea\\\",\\\"to\\\":\\\"0x70601d6107f9c66c3f0090a605cf767e8cbc9ccf\\\",\\\"data\\\":\\\"0x8206a4d1000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000a\\\"}],\\\"id\\\":192,\\\"jsonrpc\\\":\\\"2.0\\\"}\",\"requestMethod\":\"POST\",\"url\":\"https://rpc-testnet.bitkubchain.io\"}, code=UNPREDICTABLE_GAS_LIMIT, version=providers/5.8.0)"
+    }
+  ]
+}
