@@ -10,10 +10,8 @@ if (fs.existsSync(envPath)) {
         console.error('Error loading .env file:', result.error);
         process.exit(1);
     }
-    console.log(`Loaded ${Object.keys(result.parsed || {}).length} environment variables from .env`);
 } else {
-    console.error('.env file not found. Please copy .env.example to .env and configure it.');
-    console.log('Run: cp .env.example .env');
+    console.error('.env file not found.');
     process.exit(1);
 }
 
@@ -29,7 +27,7 @@ const config = {
     maxFeePerGas: ethers.utils.parseUnits(process.env.MAX_FEE_PER_GAS || '30', 'gwei'),
     maxPriorityFeePerGas: ethers.utils.parseUnits(process.env.MAX_PRIORITY_FEE_PER_GAS || '2', 'gwei'),    
     networkName: process.env.NETWORK_NAME,    
-    outputDir: process.env.OUTPUT_DIR || './fee-enable-reports',
+    outputDir: process.env.OUTPUT_DIR || './',
 };
 
 const factoryABI = [
@@ -50,7 +48,6 @@ class UniswapV3FeeProtocolUpdater {
         this.provider = new ethers.providers.JsonRpcProvider(config.rpcUrl);
         this.wallet = new ethers.Wallet(config.privateKey, this.provider);
         this.factory = new ethers.Contract(config.factoryAddress, factoryABI, this.wallet);
-        
         this.successCount = 0;
         this.errorCount = 0;
         this.errors = [];
@@ -61,167 +58,79 @@ class UniswapV3FeeProtocolUpdater {
     }
 
     async generateReport(allPools, poolsNeedingUpdate) {
-        this.endTime = new Date();
-        const duration = this.endTime - this.startTime;
-        
-        const reportDir = path.join(this.config.outputDir, `report`);
+        const reportDir = path.join(this.config.outputDir, `fee-enable-report`);
         
         if (!fs.existsSync(reportDir)) {
             fs.mkdirSync(reportDir, { recursive: true });
         }
-        
-        console.log(`\nGenerating reports in: ${reportDir}`);
-        
-        await this.generateSummaryReport(reportDir, allPools, poolsNeedingUpdate, duration);                
-        await this.generateJSONReport(reportDir, allPools, poolsNeedingUpdate, duration);
-        
-        console.log(`Reports generated successfully!`);
+                
+        await this.generateSummaryReport(reportDir, allPools, poolsNeedingUpdate);                
     }
 
-    async generateSummaryReport(reportDir, allPools, poolsNeedingUpdate, duration) {
-        const summaryFile = path.join(reportDir, 'summary.txt');
-        
-        const totalGasUsed = this.processedPools
-            .filter(p => p.gasUsed)
-            .reduce((sum, p) => sum + BigInt(p.gasUsed), BigInt(0));
-            
-        const averageGasPrice = this.processedPools
-            .filter(p => p.effectiveGasPrice)
-            .reduce((sum, p, _, arr) => sum + BigInt(p.effectiveGasPrice) / BigInt(arr.length), BigInt(0));
-            
-        const totalCost = totalGasUsed * averageGasPrice;
-        
+    async generateSummaryReport(reportDir, allPools, poolsNeedingUpdate) {
+        const summaryFile = path.join(reportDir, this.config.networkName + '-summary.txt');
+
+        const poolsAlreadyCorrect = allPools.filter(p => !p.needsUpdate);
+
+        const needingUpdateList = poolsNeedingUpdate
+            .map(p => `• ${p.address} | ${p.token0} - ${p.token1}`)
+            .join('\n    ');
+        const alreadyCorrectList = poolsAlreadyCorrect
+            .map(p => `• ${p.address} | ${p.token0} - ${p.token1}`)
+            .join('\n    ');
+
         const summary = `
-        ═══════════════════════════════════════════════════════════════
-                            UNISWAP V3 FEE PROTOCOL UPDATE REPORT
-        ═══════════════════════════════════════════════════════════════
+    ═══════════════════════════════════════════════════════════════
+    CMSWAP FEE PROTOCOL UPDATE REPORT
+    ═══════════════════════════════════════════════════════════════
 
-        EXECUTION SUMMARY
-        ────────────────────────────────────────────────────────────────
-        Network:                    ${this.config.networkName}
-        Factory Address:             ${this.config.factoryAddress}
-        Executor Address:            ${this.wallet.address}
-        Target Fee Protocol:         ${this.config.feeProtocol0}/${this.config.feeProtocol1}
+    EXECUTION SUMMARY
+    ────────────────────────────────────────────────────────────────
+    Network:                     ${this.config.networkName}
+    Factory Address:             ${this.config.factoryAddress}
+    Executor Address:            ${this.wallet.address}
+    Target Fee Protocol:         ${this.config.feeProtocol0}/${this.config.feeProtocol1}
 
-        TIMING INFORMATION
-        ────────────────────────────────────────────────────────────────
-        Start Time:                  ${this.startTime.toISOString()}
-        End Time:                    ${this.endTime.toISOString()}
-        Total Duration:              ${Math.round(duration / 1000)} seconds
-        Duration (formatted):        ${Math.floor(duration / 60000)}m ${Math.floor((duration % 60000) / 1000)}s
+    POOL STATISTICS
+    ────────────────────────────────────────────────────────────────
+    Total Pools Analyzed:        ${allPools.length}
+    Pools Needing Update:        ${poolsNeedingUpdate.length}
+    Pools Already Correct:       ${this.skippedPools.length}
+    Successful Updates:          ${this.successCount}
+    Failed Updates:              ${this.errorCount}
+    Success Rate:                ${poolsNeedingUpdate.length > 0 ? ((this.successCount / poolsNeedingUpdate.length) * 100).toFixed(2) : 100}%
 
-        POOL STATISTICS
-        ────────────────────────────────────────────────────────────────
-        Total Pools Analyzed:        ${allPools.length}
-        Pools Needing Update:        ${poolsNeedingUpdate.length}
-        Pools Already Correct:       ${this.skippedPools.length}
-        Successful Updates:          ${this.successCount}
-        Failed Updates:              ${this.errorCount}
-        Success Rate:                ${poolsNeedingUpdate.length > 0 ? ((this.successCount / poolsNeedingUpdate.length) * 100).toFixed(2) : 100}%
+    POOLS NEEDING UPDATE (${poolsNeedingUpdate.length})
+    ────────────────────────────────────────────────────────────────
+    ${needingUpdateList || '• None'}
 
-        GAS INFORMATION
-        ────────────────────────────────────────────────────────────────
-        Total Gas Used:              ${totalGasUsed.toString()} units
-        Average Gas Price:           ${ethers.utils.formatUnits(averageGasPrice.toString(), 'gwei')} gwei
-        Total Cost:                  ${ethers.utils.formatEther(totalCost.toString())} ETH
-        Gas Limit per TX:            ${this.config.gasLimit}
-        Max Fee per Gas:             ${ethers.utils.formatUnits(this.config.maxFeePerGas, 'gwei')} gwei
-        Max Priority Fee:            ${ethers.utils.formatUnits(this.config.maxPriorityFeePerGas, 'gwei')} gwei
+    POOLS ALREADY CORRECT (${poolsAlreadyCorrect.length})
+    ────────────────────────────────────────────────────────────────
+    ${alreadyCorrectList || '• None'}
 
-        CONFIGURATION SETTINGS
-        ────────────────────────────────────────────────────────────────
-        Batch Size:                  ${this.config.batchSize}
-        Network:                     ${this.config.networkName}
-        Output Directory:            ${this.config.outputDir}
+    ${this.errorCount > 0 ? `
+    ERRORS ENCOUNTERED (${this.errorCount})
+    ────────────────────────────────────────────────────────────────
+    ${this.errors.map(err => `• ${err.pool}: ${err.error}`).join('\n')}
+    ` : ''}
 
-        ${this.errorCount > 0 ? `
-        ERRORS ENCOUNTERED (${this.errorCount})
-        ────────────────────────────────────────────────────────────────
-        ${this.errors.map(err => `• ${err.pool}: ${err.error}`).join('\n')}
-        ` : ''}
-
-        ═══════════════════════════════════════════════════════════════
-        Report generated on: ${new Date().toISOString()}
-        ═══════════════════════════════════════════════════════════════
+    ═══════════════════════════════════════════════════════════════
+    Report generated on: ${new Date().toISOString()}
+    ═══════════════════════════════════════════════════════════════
         `;
 
         fs.writeFileSync(summaryFile, summary);
         console.log(`Summary report saved: ${summaryFile}`);
     }
 
-    async generateJSONReport(reportDir, allPools, poolsNeedingUpdate, duration) {
-        const report = {
-            metadata: {
-                timestamp: new Date().toISOString(),
-                network: this.config.networkName,
-                factoryAddress: this.config.factoryAddress,
-                executorAddress: this.wallet.address,
-                targetFeeProtocol: {
-                    token0: this.config.feeProtocol0,
-                    token1: this.config.feeProtocol1
-                },
-                execution: {
-                    startTime: this.startTime.toISOString(),
-                    endTime: this.endTime.toISOString(),
-                    durationMs: duration,
-                    durationFormatted: `${Math.floor(duration / 60000)}m ${Math.floor((duration % 60000) / 1000)}s`
-                }
-            },
-            statistics: {
-                totalPoolsAnalyzed: allPools.length,
-                poolsNeedingUpdate: poolsNeedingUpdate.length,
-                poolsAlreadyCorrect: this.skippedPools.length,
-                successfulUpdates: this.successCount,
-                failedUpdates: this.errorCount,
-                successRate: poolsNeedingUpdate.length > 0 ? ((this.successCount / poolsNeedingUpdate.length) * 100) : 100
-            },
-            gasInformation: {
-                totalGasUsed: this.processedPools
-                    .filter(p => p.gasUsed)
-                    .reduce((sum, p) => sum + BigInt(p.gasUsed), BigInt(0)).toString(),
-                averageGasPrice: this.processedPools
-                    .filter(p => p.effectiveGasPrice)
-                    .reduce((sum, p, _, arr) => sum + BigInt(p.effectiveGasPrice) / BigInt(arr.length), BigInt(0)).toString(),
-                gasLimitPerTx: this.config.gasLimit,
-                maxFeePerGas: this.config.maxFeePerGas.toString(),
-                maxPriorityFeePerGas: this.config.maxPriorityFeePerGas.toString()
-            },
-            configuration: {
-                batchSize: this.config.batchSize,
-                networkName: this.config.networkName,
-                outputDir: this.config.outputDir
-            },
-            pools: {
-                all: allPools,
-                processed: this.processedPools,
-                skipped: this.skippedPools
-            },
-            errors: this.errors
-        };
-        
-        const jsonFile = path.join(reportDir, 'complete_report.json');
-        fs.writeFileSync(jsonFile, JSON.stringify(report, null, 2));
-        console.log(`Complete JSON report saved: ${jsonFile}`);
-    }
-
-    async initialize() {
-        console.log('Initializing UniswapV3 Fee Protocol Updater...');
-        console.log(`Network: ${this.config.networkName}`);
-        console.log(`Factory Address: ${this.config.factoryAddress}`);
-        console.log(`Wallet Address: ${this.wallet.address}`);
-        console.log(`Fee Protocol Settings: token0=${this.config.feeProtocol0}, token1=${this.config.feeProtocol1}`);
-        
+    async initialize() {        
         if (!fs.existsSync(this.config.outputDir)) {
             fs.mkdirSync(this.config.outputDir, { recursive: true });
             console.log(`Created output directory: ${this.config.outputDir}`);
         }
         
         const balance = await this.provider.getBalance(this.wallet.address);
-        console.log(`Wallet Balance: ${ethers.utils.formatEther(balance)} ETH`);
-        
-        if (balance < ethers.utils.parseEther('0.1')) {
-            console.warn('Warning: Wallet balance is low. Make sure you have enough ETH for gas fees.');
-        }
+        console.log(`Wallet Balance: ${ethers.utils.formatEther(balance)}`);
     }
 
     async getAllPoolAddresses() {
@@ -231,7 +140,6 @@ class UniswapV3FeeProtocolUpdater {
         const startBlock = config.factoryDeploymentblock || 0;
         const endBlock = "latest";
     
-        // Get PoolCreated events in chunks to avoid RPC limits
         const chunkSize = 10000;
         let currentBlock = Number(startBlock);
         const latestBlock = await this.provider.getBlockNumber();
@@ -281,8 +189,7 @@ class UniswapV3FeeProtocolUpdater {
         
             currentBlock = toBlockChunk + 1;
         
-            // Small delay to avoid overwhelming RPC
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Small delay to avoid overwhelming RPC
         }
         
         console.log(`Retrieved ${pools.length} pool addresses`);
@@ -298,11 +205,7 @@ class UniswapV3FeeProtocolUpdater {
             const tx = await pool.setFeeProtocol(
                 this.config.feeProtocol0,
                 this.config.feeProtocol1,
-                {
-                    // gasLimit: gasLimit,
-                    // maxFeePerGas: this.config.maxFeePerGas,
-                    // maxPriorityFeePerGas: this.config.maxPriorityFeePerGas,
-                }
+                // { gasLimit: gasLimit, maxFeePerGas: this.config.maxFeePerGas, maxPriorityFeePerGas: this.config.maxPriorityFeePerGas, }
             );
             
             console.log(`Transaction sent: ${tx.hash}`);
@@ -312,7 +215,6 @@ class UniswapV3FeeProtocolUpdater {
                 console.log(`Successfully updated pool: ${poolAddress}`);
                 this.successCount++;
                 
-                // Record successful transaction
                 this.processedPools.push({
                     address: poolAddress,
                     status: 'success',
@@ -327,7 +229,6 @@ class UniswapV3FeeProtocolUpdater {
                 console.log(`Transaction failed for pool: ${poolAddress}`);
                 this.errorCount++;
                 
-                // Record failed transaction
                 this.processedPools.push({
                     address: poolAddress,
                     status: 'failed',
@@ -338,13 +239,11 @@ class UniswapV3FeeProtocolUpdater {
                 
                 return { success: false, error: 'Transaction failed' };
             }
-            
         } catch (error) {
             console.error(`Error updating pool ${poolAddress}: ${error.message}`);
             this.errorCount++;
             this.errors.push({ pool: poolAddress, error: error.message });
             
-            // Record error
             this.processedPools.push({
                 address: poolAddress,
                 status: 'error',
@@ -364,7 +263,6 @@ class UniswapV3FeeProtocolUpdater {
         const poolsNeedingUpdate = poolsInfo.filter(pool => pool.needsUpdate);
         const poolsAlreadyCorrect = poolsInfo.filter(pool => !pool.needsUpdate);
         
-        // Record skipped pools
         this.skippedPools = poolsAlreadyCorrect.map(pool => ({
             address: pool.address,
             token0: pool.token0,
@@ -388,20 +286,16 @@ class UniswapV3FeeProtocolUpdater {
         
         console.log('\nStarting fee protocol updates...');
         
-        // Update pools in batches
         for (let i = 0; i < poolsNeedingUpdate.length; i += this.config.batchSize) {
             const batch = poolsNeedingUpdate.slice(i, i + this.config.batchSize);
             console.log(`\nProcessing batch ${Math.floor(i / this.config.batchSize) + 1} of ${Math.ceil(poolsNeedingUpdate.length / this.config.batchSize)}`);
             
-            // Process batch sequentially to avoid nonce issues
-            for (const poolInfo of batch) {
+            for (const poolInfo of batch) { // Process batch sequentially to avoid nonce issues
                 await this.updateFeeProtocol(poolInfo.address);
-                // Small delay between transactions
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Small delay between transactions
             }
         }
         
-        // Generate final report
         await this.generateReport(poolsInfo, poolsNeedingUpdate);
     }
 
@@ -423,12 +317,10 @@ class UniswapV3FeeProtocolUpdater {
             }
             
             console.log('\nScript execution completed!');
-            
         } catch (error) {
             console.error('Fatal error:', error);
             this.endTime = new Date();
             
-            // Generate error report
             if (this.startTime) {
                 await this.generateReport([], []);
             }
@@ -438,112 +330,24 @@ class UniswapV3FeeProtocolUpdater {
     }
 }
 
-function validateConfig(config) {
-    const requiredEnvVars = ['RPC_URL', 'PRIVATE_KEY'];
-    const missing = requiredEnvVars.filter(envVar => !process.env[envVar]);
-    
-    if (missing.length > 0) {
-        throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
-    }
-    
-    if (!config.rpcUrl) {
-        throw new Error('RPC_URL is required in environment variables');
-    }
-    
-    if (!config.privateKey) {
-        throw new Error('PRIVATE_KEY is required in environment variables');
-    }
-    
-    if (config.feeProtocol0 !== 0 && (config.feeProtocol0 < 4 || config.feeProtocol0 > 10)) {
-        throw new Error('FEE_PROTOCOL_0 must be 0 or between 4 and 10');
-    }
-    
-    if (config.feeProtocol1 !== 0 && (config.feeProtocol1 < 4 || config.feeProtocol1 > 10)) {
-        throw new Error('FEE_PROTOCOL_1 must be 0 or between 4 and 10');
-    }
-    
-    if (isNaN(config.batchSize) || config.batchSize <= 0) {
-        throw new Error('BATCH_SIZE must be a positive number');
-    }
-    
-    if (isNaN(config.gasLimit) || config.gasLimit <= 0) {
-        throw new Error('GAS_LIMIT must be a positive number');
-    }
-}
-
 async function main() {
-    try {
-        validateConfig(config);
-        
+    try {        
         const updater = new UniswapV3FeeProtocolUpdater(config);
         await updater.run();
-        
     } catch (error) {
         console.error('Error:', error.message);
         process.exit(1);
     }
 }
 
-async function dryRun() {
-    console.log('Running in DRY RUN mode - no transactions will be sent\n');
-    
-    const provider = new ethers.JsonRpcProvider(config.rpcUrl);
-    const factory = new ethers.Contract(config.factoryAddress, factoryABI, provider);
-    
-    const poolCount = await factory.allPoolsLength();
-    console.log(`Total pools in factory: ${poolCount.toString()}`);
-    
-    // Sample first 10 pools
-    console.log('\nSampling first 10 pools:');
-    for (let i = 0; i < Math.min(10, Number(poolCount)); i++) {
-        const poolAddress = await factory.allPools(i);
-        const pool = new ethers.Contract(poolAddress, poolABI, provider);
-        
-        try {
-            const [slot0Data, token0, token1, fee] = await Promise.all([
-                pool.slot0(),
-                pool.token0(),
-                pool.token1(),
-                pool.fee()
-            ]);
-            
-            const currentFeeProtocol0 = slot0Data.feeProtocol % 16;
-            const currentFeeProtocol1 = slot0Data.feeProtocol >> 4;
-            
-            console.log(`Pool ${i + 1}: ${poolAddress}`);
-            console.log(`  Current: ${currentFeeProtocol0}/${currentFeeProtocol1}, Target: ${config.feeProtocol0}/${config.feeProtocol1}`);
-            console.log(`  Fee: ${fee.toString()}, Token0: ${token0.slice(0, 10)}...`);
-            
-        } catch (error) {
-            console.log(`Pool ${i + 1}: ${poolAddress} - Error: ${error.message}`);
-        }
-    }
-}
-
 module.exports = {
     UniswapV3FeeProtocolUpdater,
     config,
-    main,
-    dryRun
+    main
 };
 
 if (require.main === module) {
-    console.log('UniswapV3 Fee Protocol Updater');
-    console.log('Loading configuration from .env file...\n');
-    
-    // Show current configuration (without sensitive data)
-    console.log('Current Configuration:');
-    console.log(`  Network: ${config.networkName}`);
-    console.log(`  Factory: ${config.factoryAddress}`);
-    console.log(`  Fee Protocol: ${config.feeProtocol0}/${config.feeProtocol1}`);
-    console.log(`  Batch Size: ${config.batchSize}`);
-    console.log(`  Gas Limit: ${config.gasLimit}`);
-    console.log(`  Max Fee Per Gas: ${ethers.utils.formatUnits(config.maxFeePerGas, 'gwei')} gwei`);
-    console.log(`  Max Priority Fee: ${ethers.utils.formatUnits(config.maxPriorityFeePerGas, 'gwei')} gwei\n`);
-    
-    // Uncomment the line below for dry run testing
-    // dryRun();
-    
-    // Uncomment the line below for actual execution
     main();
 }
+
+// run with NODE_TLS_REJECT_UNAUTHORIZED=0 for kub rpc due to TLS certificate verification issue
